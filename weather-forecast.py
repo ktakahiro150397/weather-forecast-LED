@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 #timeモジュールをインポート
 import asyncio
 from datetime import datetime
