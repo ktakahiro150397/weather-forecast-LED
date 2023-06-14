@@ -73,7 +73,9 @@ async def main():
     except KeyboardInterrupt:
         # GPIO設定クリア
         GPIO.cleanup()
-
+    except Exception as ex:
+        GPIO.cleanup()
+        logger.debug(ex)
 
 if __name__ == "__main__":
     asyncio.run(main())
