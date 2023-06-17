@@ -65,6 +65,10 @@ async def main():
 
                 # 点滅するかどうかを判定
                 isBlink = blinkDecision.isBlink(info)
+                if isBlink :
+                    logger.debug("LEDを点滅させます。")
+                else:
+                    logger.debug("LEDを点滅させません。")
 
             if isBlink:
                 blinkTask = [gpio_17.Blink(500)]
