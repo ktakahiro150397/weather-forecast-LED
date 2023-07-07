@@ -2,12 +2,14 @@
 
 #timeモジュールをインポート
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import json
 from logging import config,getLogger
 import os
 import time
+import traceback
 import discord_send
+from dotenv import load_dotenv
 
 #RPi.GPIOモジュールをインポート
 import RPi.GPIO as GPIO
@@ -15,6 +17,9 @@ import RPi.GPIO as GPIO
 from LEDEmitter import LEDEmmitter
 from WeatherForecast.GetWeatherInformation import GetWeatherInformation,WeatherPoint
 from WeatherInfoEmitDecision import WeatherInfoEmitDecision
+
+# 環境変数を読み込み
+load_dotenv()
 
 # 現在のスクリプトファイルの絶対パスを取得する
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -83,8 +88,22 @@ async def main():
         logger.debug(ex)
 
         # エラー内容をDiscordに送信
-        discord_send.discord_send_message(message=str(ex),
-                                          username="weather-forecast.py エラー通知")
+        japan_timezone = timezone(timedelta(hours=9))
+        author = discord_send.discord_send_author(name="weather-forecast.py エラー通知",
+                                                  icon_url="https://w7.pngwing.com/pngs/285/84/png-transparent-computer-icons-error-super-8-film-angle-triangle-computer-icons.png")
+        embed = discord_send.discord_send_embed(title=ex.__class__.__name__ + "が発生しました。",
+                                                description="以下のエラーが発生しました。"+ "\r\r" + str(ex) + "\r" + traceback.format_exc(),
+                                                sidebarColorCode="#ff0000",
+                                                author=author,
+                                                timestamp=datetime.now(japan_timezone)
+                                                )
+        message = discord_send.discord_send_message(message="",
+                                          username="weather-forecast.py エラー通知",
+                                          embed=embed)
+
+        webhookUrl = os.getenv("DISCORD_SEND_URL")
+        sender = discord_send.discord_sender(webhookUrl)
+        sender.sendMessage(message)
 
 if __name__ == "__main__":
     asyncio.run(main())
