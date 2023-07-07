@@ -7,6 +7,7 @@ import json
 from logging import config,getLogger
 import os
 import time
+import discord_send
 
 #RPi.GPIOモジュールをインポート
 import RPi.GPIO as GPIO
@@ -80,6 +81,10 @@ async def main():
     except Exception as ex:
         GPIO.cleanup()
         logger.debug(ex)
+
+        # エラー内容をDiscordに送信
+        discord_send.discord_send_message(message=str(ex),
+                                          username="weather-forecast.py エラー通知")
 
 if __name__ == "__main__":
     asyncio.run(main())
