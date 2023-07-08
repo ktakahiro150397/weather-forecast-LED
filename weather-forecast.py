@@ -80,6 +80,8 @@ async def main():
                 blinkTask = [gpio_17.Blink(500)]
                 await asyncio.gather(*blinkTask)
 
+            raise Exception("test")
+
     except KeyboardInterrupt:
         # GPIO設定クリア
         GPIO.cleanup()
@@ -103,6 +105,7 @@ async def main():
 
         webhookUrl = os.getenv("DISCORD_SEND_URL")
         sender = discord_send.discord_sender(webhookUrl)
+
         sender.sendMessage(message)
 
 if __name__ == "__main__":
