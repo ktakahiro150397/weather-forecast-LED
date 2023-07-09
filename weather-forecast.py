@@ -80,7 +80,7 @@ async def main():
                 blinkTask = [gpio_17.Blink(500)]
                 await asyncio.gather(*blinkTask)
 
-            raise Exception("test")
+
 
     except KeyboardInterrupt:
         # GPIO設定クリア
@@ -90,23 +90,12 @@ async def main():
         logger.debug(ex)
 
         # エラー内容をDiscordに送信
-        japan_timezone = timezone(timedelta(hours=9))
         author = discord_send.discord_send_author(name="weather-forecast.py エラー通知",
                                                   icon_url="https://w7.pngwing.com/pngs/285/84/png-transparent-computer-icons-error-super-8-film-angle-triangle-computer-icons.png")
-        embed = discord_send.discord_send_embed(title=ex.__class__.__name__ + "が発生しました。",
-                                                description="以下のエラーが発生しました。"+ "\r\r" + str(ex) + "\r" + traceback.format_exc(),
-                                                sidebarColorCode="#ff0000",
-                                                author=author,
-                                                timestamp=datetime.now(japan_timezone)
-                                                )
-        message = discord_send.discord_send_message(message="",
-                                          username="weather-forecast.py エラー通知",
-                                          embed=embed)
-
         webhookUrl = os.getenv("DISCORD_SEND_URL")
         sender = discord_send.discord_sender(webhookUrl)
 
-        sender.sendMessage(message)
+        sender.sendExceptionMessage(author,ex)
 
 if __name__ == "__main__":
     asyncio.run(main())
