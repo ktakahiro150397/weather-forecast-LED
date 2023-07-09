@@ -91,7 +91,7 @@ async def main():
 
         # エラー内容をDiscordに送信
         author = discord_send.discord_send_author(name="weather-forecast.py エラー通知",
-                                                  icon_url="https://w7.pngwing.com/pngs/285/84/png-transparent-computer-icons-error-super-8-film-angle-triangle-computer-icons.png")
+                                                  icon_url="")
         webhookUrl = os.getenv("DISCORD_SEND_URL")
         sender = discord_send.discord_sender(webhookUrl)
 
