@@ -1,11 +1,15 @@
-
-
 from datetime import datetime, timezone, timedelta
+import logging
 
 
 class WeatherInfoEmitDecision():
 
     def __init__(self):
+
+        self._logger = logging.getLogger(__name__)
+        self._logger.addHandler(logging.NullHandler())
+        self._logger.setLevel(logging.DEBUG)
+        self._logger.propagate = True
 
         # 傘が必要な天気ID
         # https://openweathermap.org/weather-conditions
@@ -33,4 +37,7 @@ class WeatherInfoEmitDecision():
 
     def _isUmbllela_Required(self,weather_code: list) -> bool:
         common = list(set(weather_code) &  set(self._umblleraRequiredWeatherId))
+
+        self._logger.debug("common:{}".common(weather_code))
+
         return len(common) > 0
