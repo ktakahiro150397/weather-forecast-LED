@@ -38,6 +38,6 @@ class WeatherInfoEmitDecision():
     def _isUmbllela_Required(self,weather_code: list) -> bool:
         common = list(set(weather_code) &  set(self._umblleraRequiredWeatherId))
 
-        self._logger.debug("common:{}".common(weather_code))
+        self._logger.debug("common:{}".format(common))
 
         return len(common) > 0
